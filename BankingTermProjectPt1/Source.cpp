@@ -128,7 +128,7 @@ void createCustomer() {
 	int typeAccount;	//1 for Checkings, 2 for Savings
 	int money;
 	vector<vector<string>> information;
-	int newCustID = 0;
+	int newCustID = 1000;
 	vector<string> row;
 	string line, word;
 
@@ -150,21 +150,10 @@ void createCustomer() {
 		cout << "Could not open the file\n";
 	}
 
-	for (int i = 0; i < information.size() - 1; i++)
+	for (int i = 0; i < information.size(); i++)
 	{
 		int next = i + 1;
-		//newCustID = stoi(information[0][0]);
-		if (information.empty()) {
-			newCustID = stoi(information[0][0]);					//This section right here does not work if the csv file is empty, otherwise works perfectly. I tried to add that isempty thing, but that also did not work. 
-			break;
-
-		}
-		else if (stoi(information[i][0]) > stoi(information[next][0])) {
-			newCustID = stoi(information[i][0]);
-
-		}
-		else
-			newCustID = stoi(information[next][0]);
+		newCustID = stoi(information[i][0]);
 	}
 
 	id = newCustID + 1;
@@ -172,7 +161,6 @@ void createCustomer() {
 	{
 		fileout << information[i][0] << "," << information[i][1] << "," << information[i][2] << "," << information[i][3] << "," << information[i][4] << "," << information[i][5] << "," << information[i][6] << "," << information[i][7] << '\n';
 	}
-
 
 	cout << "What is the name going on the account?" << endl;
 	cin.ignore();
