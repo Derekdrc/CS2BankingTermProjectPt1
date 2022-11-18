@@ -78,11 +78,35 @@ int main() {
 	return 0;
 }
 
-//Starts program and loads existing csv file, or creates new one if one does not exist
+//Starts program will now load all customers into a vector of customer objects
 void start() {
 	fstream fin;
 	fin.open("customer.csv", ios::out | ios::app);
-	vector<Customer> Custs;
+	vector<Customer* > Custs;
+
+	vector<vector<string>> content;
+	vector<string> row;
+	string line, word;
+
+	fstream file("customer.csv", ios::in);
+	if (file.is_open()) {
+		while (getline(file, line))
+		{
+			row.clear();
+
+			stringstream str(line);
+
+			while (getline(str, word, ','))
+				row.push_back(word);
+			content.push_back(row);
+		}
+	}
+	else {
+		cout << "Could not open the file\n";
+	}
+	for (int i = 0; i < content.size(); i++) {
+		new Customer(stoi(content[i][0]), content[i][1], content[i][2], stoi(content[i][3]), content[i][4], content[i][5], stoi(content[i][6]), stoi(content[i][7]));
+	}
 
 	fin.close();
 }
