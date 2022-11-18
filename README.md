@@ -81,3 +81,14 @@ I/O.
 o You may use Structs sparingly and you must justify your reason for 
 using it.   
 o Suggestion: use vectors.
+
+Project 2:   
+o Use Inheritance and Polymorphism to support the customer and 
+transaction processing.    
+ 
+o Option 7 should list customer names and IDs in name or ID order. 
+The user should be allowed to specify.   You may not use the STL 
+library to implement your sort.  However, you may use any sorting 
+technique that you wish.   
+o Initial user interface design.  The screens do not need to be 
+implemented – only designed. 
