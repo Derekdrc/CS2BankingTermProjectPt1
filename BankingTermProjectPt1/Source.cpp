@@ -15,62 +15,63 @@
 #include <vector>
 using namespace std;
 
-void start();
+void start(vector<Customer> &);
 int menu();
-void createCustomer();
-void deleteCustomer();
-void updateCustomer();
-void deposit();
-void withdrawl();
-void viewCustomerInfo();
-void listCustomers();
-void stop();
+void createCustomer(vector<Customer>&);
+void deleteCustomer(vector<Customer>&);
+void updateCustomer(vector<Customer>&);
+void deposit(vector<Customer>&);
+void withdrawl(vector<Customer>&);
+void viewCustomerInfo(vector<Customer>&);
+void listCustomers(vector<Customer>&);
+void stop(vector<Customer>&);
 
 
 int main() {
-	start();
+	vector<Customer> Custs;
+	start(Custs);
 	int choice = 0;
 	while (choice != 8) {
 		choice = menu();
 		switch (choice) {
 		case 1:
 			//Create new account
-			createCustomer();
+			createCustomer(Custs);
 			Sleep(1500);
 			break;
 		case 2:
 			//Remove account
-			deleteCustomer();
+			deleteCustomer(Custs);
 			Sleep(1500);
 			break;
 		case 3:
 			//Update name & address for existing customer
-			updateCustomer();
+			updateCustomer(Custs);
 			Sleep(1500);
 			break;
 		case 4:
 			//Deposit transaction
-			deposit();
+			deposit(Custs);
 			Sleep(1500);
 			break;
 		case 5:
 			//Withdrawl transaction
-			withdrawl();
+			withdrawl(Custs);
 			Sleep(1500);
 			break;
 		case 6:
 			//List information of existing customer
-			viewCustomerInfo();
+			viewCustomerInfo(Custs);
 			Sleep(1500);
 			break;
 		case 7:
 			//List customer names and ids
-			listCustomers();
+			listCustomers(Custs);
 			Sleep(1500);
 			break;
 		case 8:
 			//Exit program and write all customers to csv file
-			stop();
+			stop(Custs);
 			break;
 			return 0;
 		}
@@ -79,10 +80,9 @@ int main() {
 }
 
 //Starts program will now load all customers into a vector of customer objects
-void start() {
+void start(vector<Customer>& Custs) {
 	fstream fin;
 	fin.open("customer.csv", ios::out | ios::app);
-	vector<Customer* > Custs;
 
 	vector<vector<string>> content;
 	vector<string> row;
@@ -105,7 +105,7 @@ void start() {
 		cout << "Could not open the file\n";
 	}
 	for (int i = 0; i < content.size(); i++) {
-		new Customer(stoi(content[i][0]), content[i][1], content[i][2], stoi(content[i][3]), content[i][4], content[i][5], stoi(content[i][6]), stoi(content[i][7]));
+		Custs.push_back(Customer(stoi(content[i][0]), content[i][1], content[i][2], stoi(content[i][3]), content[i][4], content[i][5], stoi(content[i][6]), stoi(content[i][7])));
 	}
 
 	fin.close();
@@ -137,7 +137,7 @@ int menu() {
 }
 
 //Creates a new customer
-void createCustomer() {
+void createCustomer(vector<Customer>& Custs) {
 	system("cls");
 
 	fstream file("customer.csv", ios::in);
@@ -211,7 +211,7 @@ void createCustomer() {
 }
 
 //Deletes an existing customer
-void deleteCustomer()
+void deleteCustomer(vector<Customer>& Custs)
 {
 	int DeleteID;
 
@@ -265,7 +265,7 @@ void deleteCustomer()
 }
 
 //Updates a current customers information
-void updateCustomer()
+void updateCustomer(vector<Customer>& Custs)
 {
 	system("cls");
 	fstream file("customer.csv", ios::in);
@@ -336,7 +336,7 @@ void updateCustomer()
 }
 
 //Record a deposit transaction
-void deposit()
+void deposit(vector<Customer>& Custs)
 {
 	system("cls");
 	fstream file("customer.csv", ios::in);
@@ -398,7 +398,7 @@ void deposit()
 }
 
 //Records a withdrawl transaction
-void withdrawl()
+void withdrawl(vector<Customer>& Custs)
 {
 	system("cls");
 	fstream file("customer.csv", ios::in);
@@ -456,7 +456,7 @@ void withdrawl()
 }
 
 //Shows all information about a customer
-void viewCustomerInfo() {
+void viewCustomerInfo(vector<Customer>& Custs) {
 	//displays all information about a chosen customer
 	system("cls");
 	vector<vector<string>> content;
@@ -520,7 +520,7 @@ void viewCustomerInfo() {
 }
 
 //Prints out all customers
-void listCustomers() {
+void listCustomers(vector<Customer>& Custs) {
 	system("cls");
 	vector<vector<string>> content;
 	vector<string> row;
@@ -551,8 +551,19 @@ void listCustomers() {
 }
 
 //Ends program
-void stop() {
+void stop(vector<Customer>& Custs) {
 	//terminate program and write all cust info to csv file
+	ofstream fileout("customer2.csv");
+	fstream file("customer.csv", ios::in);
+
+	for (int i = 0; i < Custs.size(); i++) {
+		fileout << Custs[i].getId() << "," << Custs[i].getName() << "," << Custs[i].getDOB() << "," << Custs[i].getSSN() << "," << Custs[i].getAddress() << "," << Custs[i].getNumber() << "," << Custs[i].getAccountType() << "," << Custs[i].getMoney() << '\n';
+	}
+
+	file.close();
+	fileout.close();
+	remove("customer.csv");
+	rename("customer2.csv", "customer.csv");
 
 	system("cls");
 	cout << "Program ended." << endl;
