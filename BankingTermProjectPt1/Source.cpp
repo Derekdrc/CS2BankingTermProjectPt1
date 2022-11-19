@@ -28,7 +28,7 @@ void stop(vector<Customer>&);
 
 
 int main() {
-	vector<Customer> customers;
+	Customer* vector<Customer> customers;
 	start(customers);
 	int choice = 0;
 	while (choice != 8) {
@@ -105,7 +105,15 @@ void start(vector<Customer>& customers) {
 		cout << "Could not open the file\n";
 	}
 	for (int i = 0; i < content.size(); i++) {
-		customers.push_back(Customer(stoi(content[i][0]), content[i][1], content[i][2], stoi(content[i][3]), content[i][4], content[i][5], stoi(content[i][6]), stoi(content[i][7])));
+		int accountType = stoi(content[i][6]);
+		if (accountType == 1) {
+			customers.push_back(Customer(stoi(content[i][0]), content[i][1], content[i][2], stoi(content[i][3]), content[i][4], content[i][5], stoi(content[i][7])));
+		}
+		else if (accountType == 2) {
+			customers.push_back(SavingsAccount(stoi(content[i][0]), content[i][1], content[i][2], stoi(content[i][3]), content[i][4], content[i][5], stoi(content[i][7])), true));
+		}
+		
+		
 	}
 
 	fin.close();
@@ -170,7 +178,14 @@ void createCustomer(vector<Customer>& customers) {
 	cin >> typeAccount;
 	cout << endl << "How much money are you depositing?" << endl;
 	cin >> money;
-	customers.push_back(Customer(id, name, dob, ssn, address, phoneNumber, typeAccount, money));
+	if (typeAccount == 1) {
+		customers.push_back(Customer(id, name, dob, ssn, address, phoneNumber, money));
+	}
+	else if (typeAccount == 2) {
+		bool isSavings = true;
+		customers.push_back(SavingsAccount(id, name, dob, ssn, address, phoneNumber, money, isSavings));
+	}
+	
 	cout << "Thank you for working with Lawrence Tech credit union. You are all set, please come back soon.";
 }
 
@@ -313,19 +328,7 @@ void viewCustomerInfo(vector<Customer>& customers) {
 	for (int i = 0; i < customers.size(); i++) {
 		if (id == customers[i].getId()) {
 			count = 1;
-			cout << "Customer ID: " << customers[i].getId() << endl;
-			cout << "Customer Name: " << customers[i].getName() << endl;
-			cout << "Customer Date of Birth: " << customers[i].getDOB() << endl;
-			cout << "Customer SSN: " << customers[i].getSSN() << endl;
-			cout << "Customer Address: " << customers[i].getAddress() << endl;
-			cout << "Customer Phone Number: " << customers[i].getNumber() << endl;
-			if (customers[i].getAccountType() == 1) {
-				cout << "Customers account type: Checkings" << endl;
-			}
-			else if (customers[i].getAccountType() == 2) {
-				cout << "Customers account type: Savings" << endl;
-			}
-			cout << "Customer Account Balance: $" << customers[i].getMoney() << endl;
+			customers[i].printCustomer();
 		}
 	}
 	if (count == 0) {
