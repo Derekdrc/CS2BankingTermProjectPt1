@@ -28,50 +28,50 @@ void stop(vector<Customer>&);
 
 
 int main() {
-	vector<Customer> Custs;
-	start(Custs);
+	vector<Customer> customers;
+	start(customers);
 	int choice = 0;
 	while (choice != 8) {
 		choice = menu();
 		switch (choice) {
 		case 1:
 			//Create new account
-			createCustomer(Custs);
+			createCustomer(customers);
 			Sleep(1500);
 			break;
 		case 2:
 			//Remove account
-			deleteCustomer(Custs);
+			deleteCustomer(customers);
 			Sleep(1500);
 			break;
 		case 3:
 			//Update name & address for existing customer
-			updateCustomer(Custs);
+			updateCustomer(customers);
 			Sleep(1500);
 			break;
 		case 4:
 			//Deposit transaction
-			deposit(Custs);
+			deposit(customers);
 			Sleep(1500);
 			break;
 		case 5:
 			//Withdrawl transaction
-			withdrawl(Custs);
+			withdrawl(customers);
 			Sleep(1500);
 			break;
 		case 6:
 			//List information of existing customer
-			viewCustomerInfo(Custs);
+			viewCustomerInfo(customers);
 			Sleep(1500);
 			break;
 		case 7:
 			//List customer names and ids
-			listCustomers(Custs);
+			listCustomers(customers);
 			Sleep(1500);
 			break;
 		case 8:
 			//Exit program and write all customers to csv file
-			stop(Custs);
+			stop(customers);
 			break;
 			return 0;
 		}
@@ -80,7 +80,7 @@ int main() {
 }
 
 //Starts program will now load all customers into a vector of customer objects
-void start(vector<Customer>& Custs) {
+void start(vector<Customer>& customers) {
 	fstream fin;
 	fin.open("customer.csv", ios::out | ios::app);
 
@@ -105,7 +105,7 @@ void start(vector<Customer>& Custs) {
 		cout << "Could not open the file\n";
 	}
 	for (int i = 0; i < content.size(); i++) {
-		Custs.push_back(Customer(stoi(content[i][0]), content[i][1], content[i][2], stoi(content[i][3]), content[i][4], content[i][5], stoi(content[i][6]), stoi(content[i][7])));
+		customers.push_back(Customer(stoi(content[i][0]), content[i][1], content[i][2], stoi(content[i][3]), content[i][4], content[i][5], stoi(content[i][6]), stoi(content[i][7])));
 	}
 
 	fin.close();
@@ -137,7 +137,7 @@ int menu() {
 }
 
 //Creates a new customer
-void createCustomer(vector<Customer>& Custs) {
+void createCustomer(vector<Customer>& customers) {
 	system("cls");
 
 	int id = 0;
@@ -150,8 +150,8 @@ void createCustomer(vector<Customer>& Custs) {
 	int money;
 	int newCustID = 1000;
 
-	for (int i = 0; i < Custs.size(); i++) {
-		id = Custs[i].getId() + 1;
+	for (int i = 0; i < customers.size(); i++) {
+		id = customers[i].getId() + 1;
 	}
 
 	cout << "What is the name going on the account?" << endl;
@@ -170,12 +170,12 @@ void createCustomer(vector<Customer>& Custs) {
 	cin >> typeAccount;
 	cout << endl << "How much money are you depositing?" << endl;
 	cin >> money;
-	Custs.push_back(Customer(id, name, dob, ssn, address, phoneNumber, typeAccount, money));
+	customers.push_back(Customer(id, name, dob, ssn, address, phoneNumber, typeAccount, money));
 	cout << "Thank you for working with Lawrence Tech credit union. You are all set, please come back soon.";
 }
 
 //Deletes an existing customer
-void deleteCustomer(vector<Customer>& Custs)
+void deleteCustomer(vector<Customer>& customers)
 {
 	int DeleteID;
 
@@ -191,10 +191,10 @@ void deleteCustomer(vector<Customer>& Custs)
 	cout << "What account do you want to delete. Please Enter ID ." << endl;
 	cin >> DeleteID;
 
-	for (int i = 0; i < Custs.size(); i++) {
-		if (Custs[i].getId() == DeleteID) {
+	for (int i = 0; i < customers.size(); i++) {
+		if (customers[i].getId() == DeleteID) {
 			count = 1;
-			Custs.erase(Custs.begin() + i);
+			customers.erase(customers.begin() + i);
 		}
 	}
 
@@ -206,7 +206,7 @@ void deleteCustomer(vector<Customer>& Custs)
 }
 
 //Updates a current customers information
-void updateCustomer(vector<Customer>& Custs)
+void updateCustomer(vector<Customer>& customers)
 {
 	system("cls");
 
@@ -224,14 +224,14 @@ void updateCustomer(vector<Customer>& Custs)
 	cin.ignore();
 	getline(cin, NewData);
 
-	for (int i = 0; i < Custs.size(); i++) {
-		if (Custs[i].getId() == ChangeID) {
+	for (int i = 0; i < customers.size(); i++) {
+		if (customers[i].getId() == ChangeID) {
 			count = 1;
 			if (option == 1) {
-				Custs[i].setAddress(NewData);
+				customers[i].setAddress(NewData);
 			}
 			else if (option == 2) {
-				Custs[i].setNumber(NewData);
+				customers[i].setNumber(NewData);
 			}
 		}
 	}
@@ -244,7 +244,7 @@ void updateCustomer(vector<Customer>& Custs)
 }
 
 //Record a deposit transaction
-void deposit(vector<Customer>& Custs)
+void deposit(vector<Customer>& customers)
 {
 	system("cls");
 
@@ -256,11 +256,11 @@ void deposit(vector<Customer>& Custs)
 	cout << "How much would you like to enter?" << endl;
 	cin >> NewMoney;
 
-	for (int i = 0; i < Custs.size(); i++) {
-		if (Custs[i].getId() == ChangeID) {
+	for (int i = 0; i < customers.size(); i++) {
+		if (customers[i].getId() == ChangeID) {
 			count = 1;
-			Newtotal = Custs[i].getMoney() + NewMoney;
-			Custs[i].setMoney(Newtotal);
+			Newtotal = customers[i].getMoney() + NewMoney;
+			customers[i].setMoney(Newtotal);
 		}
 	}
 
@@ -273,7 +273,7 @@ void deposit(vector<Customer>& Custs)
 }
 
 //Records a withdrawl transaction
-void withdrawl(vector<Customer>& Custs)
+void withdrawl(vector<Customer>& customers)
 {
 	system("cls");
 	int ChangeID, NewMoney, NewTotal, count = 0;
@@ -284,11 +284,11 @@ void withdrawl(vector<Customer>& Custs)
 	cout << "How much money would you like to withdraw." << endl;
 	cin >> NewMoney;
 
-	for (int i = 0; i < Custs.size(); i++) {
-		if (Custs[i].getId() == ChangeID) {
+	for (int i = 0; i < customers.size(); i++) {
+		if (customers[i].getId() == ChangeID) {
 			count = 1;
-			NewTotal = Custs[i].getMoney() - NewMoney;
-			Custs[i].setMoney(NewTotal);
+			NewTotal = customers[i].getMoney() - NewMoney;
+			customers[i].setMoney(NewTotal);
 		}
 	}
 
@@ -300,7 +300,7 @@ void withdrawl(vector<Customer>& Custs)
 }
 
 //Shows all information about a customer
-void viewCustomerInfo(vector<Customer>& Custs) {
+void viewCustomerInfo(vector<Customer>& customers) {
 	//displays all information about a chosen customer
 	system("cls");
 	int test;
@@ -310,22 +310,22 @@ void viewCustomerInfo(vector<Customer>& Custs) {
 	cout << "Who would you like to look up? Please enter customer id: ";
 	cin >> id;
 
-	for (int i = 0; i < Custs.size(); i++) {
-		if (id == Custs[i].getId()) {
+	for (int i = 0; i < customers.size(); i++) {
+		if (id == customers[i].getId()) {
 			count = 1;
-			cout << "Customer ID: " << Custs[i].getId() << endl;
-			cout << "Customer Name: " << Custs[i].getName() << endl;
-			cout << "Customer Date of Birth: " << Custs[i].getDOB() << endl;
-			cout << "Customer SSN: " << Custs[i].getSSN() << endl;
-			cout << "Customer Address: " << Custs[i].getAddress() << endl;
-			cout << "Customer Phone Number: " << Custs[i].getNumber() << endl;
-			if (Custs[i].getAccountType() == 1) {
+			cout << "Customer ID: " << customers[i].getId() << endl;
+			cout << "Customer Name: " << customers[i].getName() << endl;
+			cout << "Customer Date of Birth: " << customers[i].getDOB() << endl;
+			cout << "Customer SSN: " << customers[i].getSSN() << endl;
+			cout << "Customer Address: " << customers[i].getAddress() << endl;
+			cout << "Customer Phone Number: " << customers[i].getNumber() << endl;
+			if (customers[i].getAccountType() == 1) {
 				cout << "Customers account type: Checkings" << endl;
 			}
-			else if (Custs[i].getAccountType() == 2) {
+			else if (customers[i].getAccountType() == 2) {
 				cout << "Customers account type: Savings" << endl;
 			}
-			cout << "Customer Account Balance: $" << Custs[i].getMoney() << endl;
+			cout << "Customer Account Balance: $" << customers[i].getMoney() << endl;
 		}
 	}
 	if (count == 0) {
@@ -336,11 +336,11 @@ void viewCustomerInfo(vector<Customer>& Custs) {
 }
 
 //Prints out all customers
-void listCustomers(vector<Customer>& Custs) {
+void listCustomers(vector<Customer>& customers) {
 
-	for (int i = 0; i < Custs.size(); i++) {
-		cout << "Customer name: " << Custs[i].getName() << endl;
-		cout << "Customer ID: " << Custs[i].getId() << endl << endl;
+	for (int i = 0; i < customers.size(); i++) {
+		cout << "Customer name: " << customers[i].getName() << endl;
+		cout << "Customer ID: " << customers[i].getId() << endl << endl;
 	}
 	system("pause");
 }
