@@ -164,7 +164,7 @@ void createCustomer(vector<Customer>& Custs) {
 	cout << endl << "What is your address?" << endl;
 	cin.ignore();
 	getline(cin, address);
-	cout << endl << "What is your phone Number? No dashes." << endl;
+	cout << endl << "What is your phone Number? " << endl;
 	getline(cin, phoneNumber);
 	cout << endl << "Is this a checkings or savings account? (1 for Checkings, 2 for Savings)" << endl;
 	cin >> typeAccount;
@@ -187,149 +187,68 @@ void deleteCustomer(vector<Customer>& Custs)
 	vector<string> row;
 	string line, word;
 	int count = 0;
-	if (file.is_open()) {
-		{
-			while (getline(file, line))
-			{
-				row.clear();
 
-				stringstream str(line);
-
-				while (getline(str, word, ','))
-					row.push_back(word);
-				information.push_back(row);
-			}
-		}
-	}
-	else {
-		cout << "Could not open the file\n";
-	}
 	cout << "What account do you want to delete. Please Enter ID ." << endl;
 	cin >> DeleteID;
 
-	for (int i = 0; i < information.size(); i++)
-	{
-		int checkID = stoi(information[i][0]);
-		if (checkID != DeleteID)
-		{
-			fileout << information[i][0] << "," << information[i][1] << "," << information[i][2] << "," << information[i][3] << "," << information[i][4] << "," << information[i][5] << "," << information[i][6] << "," << information[i][7] << '\n';
+	for (int i = 0; i < Custs.size(); i++) {
+		if (Custs[i].getId() == DeleteID) {
+			count = 1;
+			Custs.erase(Custs.begin() + i);
 		}
-		else
-			count++;
 	}
+
 	if (count == 0)
 	{
 		cout << "Account number does not match an existing customer." << endl;
 	}
 	cout << "Account Removed. Thank you for working with Lawrence Tech credit union. You are all set, please come back soon.";
-	file.close();
-	fileout.close();
-	remove("customer.csv");
-	rename("customer2.csv", "customer.csv");
 }
 
 //Updates a current customers information
 void updateCustomer(vector<Customer>& Custs)
 {
 	system("cls");
-	fstream file("customer.csv", ios::in);
-	ofstream fileout("customer2.csv");
 
-	vector<vector<string>> information;
-	vector<string> row;
-	string line, word;
 	int ChangeID, option, count = 0;
 	string NewData;
 
-	if (file.is_open()) {
-		{
-			while (getline(file, line))
-			{
-				row.clear();
-
-				stringstream str(line);
-
-				while (getline(str, word, ','))
-					row.push_back(word);
-				information.push_back(row);
-			}
-		}
-	}
-	else
-	{
-		cout << "Could not open the file\n";
-	}
 
 	cout << "Please enter ID number of account." << endl;
 	cin >> ChangeID;
 
-	cout << "what do you want to change(1- Address 2-Phone number";
+	cout << "What do you want to change(1 - Address, 2 - Phone number)";
 	cin >> option;
 
 	cout << "what is the new data?" << endl;
 	cin.ignore();
 	getline(cin, NewData);
 
-
-	for (int i = 0; i < information.size(); i++)
-	{
-		int checkID = stoi(information[i][0]);
-		if (checkID == ChangeID)
-		{
-			if (option == 1)
-			{
-				fileout << information[i][0] << "," << information[i][1] << "," << information[i][2] << "," << information[i][3] << "," << NewData << "," << information[i][5] << "," << information[i][6] << "," << information[i][7] << '\n';
+	for (int i = 0; i < Custs.size(); i++) {
+		if (Custs[i].getId() == ChangeID) {
+			count = 1;
+			if (option == 1) {
+				Custs[i].setAddress(NewData);
 			}
-			else
-				fileout << information[i][0] << "," << information[i][1] << "," << information[i][2] << "," << information[i][3] << "," << information[i][4] << "," << NewData << "," << information[i][6] << "," << information[i][7] << '\n';
-			count++;
+			else if (option == 2) {
+				Custs[i].setNumber(NewData);
+			}
 		}
-		else
-			fileout << information[i][0] << "," << information[i][1] << "," << information[i][2] << "," << information[i][3] << "," << information[i][4] << "," << information[i][5] << "," << information[i][6] << "," << information[i][7] << '\n';
 	}
+
 	if (count == 0) {
 		cout << "Account number does not match an existing customer." << endl;
 	}
 
 	cout << "Thank you for working with Lawrence Tech credit union. You are all set, please come back soon.";
-
-	file.close();
-	fileout.close();
-	remove("customer.csv");
-	rename("customer2.csv", "customer.csv");
 }
 
 //Record a deposit transaction
 void deposit(vector<Customer>& Custs)
 {
 	system("cls");
-	fstream file("customer.csv", ios::in);
-	ofstream fileout("customer2.csv");
 
-	vector<vector<string>> information;
-	vector<string> row;
-	string line, word;
 	int ChangeID, Newtotal, NewMoney, count = 0;
-
-	if (file.is_open())
-	{
-		{
-			while (getline(file, line))
-			{
-				row.clear();
-
-				stringstream str(line);
-
-				while (getline(str, word, ','))
-					row.push_back(word);
-				information.push_back(row);
-			}
-		}
-	}
-	else
-	{
-		cout << "Could not open the file\n";
-	}
 
 	cout << "Please enter account ID." << endl;
 	cin >> ChangeID;
@@ -337,75 +256,40 @@ void deposit(vector<Customer>& Custs)
 	cout << "How much would you like to enter?" << endl;
 	cin >> NewMoney;
 
-	for (int i = 0; i < information.size(); i++)
-	{
-		int checkID = stoi(information[i][0]);
-		if (checkID == ChangeID)
-		{
-			count++;
-			Newtotal = stoi(information[i][7]) + NewMoney;
-			fileout << information[i][0] << "," << information[i][1] << "," << information[i][2] << "," << information[i][3] << "," << information[i][4] << "," << information[i][5] << "," << information[i][6] << "," << Newtotal << '\n';
+	for (int i = 0; i < Custs.size(); i++) {
+		if (Custs[i].getId() == ChangeID) {
+			count = 1;
+			Newtotal = Custs[i].getMoney() + NewMoney;
+			Custs[i].setMoney(Newtotal);
 		}
-		else
-			fileout << information[i][0] << "," << information[i][1] << "," << information[i][2] << "," << information[i][3] << "," << information[i][4] << "," << information[i][5] << "," << information[i][6] << "," << information[i][7] << '\n';
 	}
+
 	if (count == 0) {
 		cout << "Account number does not match an existing customer." << endl;
 	}
 
 	cout << "Thank you for working with Lawrence Tech credit union. You are all set, please come back soon." << endl;
 
-	file.close();
-	fileout.close();
-	remove("customer.csv");
-	rename("customer2.csv", "customer.csv");
 }
 
 //Records a withdrawl transaction
 void withdrawl(vector<Customer>& Custs)
 {
 	system("cls");
-	fstream file("customer.csv", ios::in);
-	ofstream fileout("customer2.csv");
-
-	vector<vector<string>> information;
-	vector<string> row;
-	string line, word;
 	int ChangeID, NewMoney, NewTotal, count = 0;
-	if (file.is_open()) {
-		{
-			while (getline(file, line))
-			{
-				row.clear();
 
-				stringstream str(line);
-
-				while (getline(str, word, ','))
-					row.push_back(word);
-				information.push_back(row);
-			}
-		}
-	}
-	else {
-		cout << "Could not open the file\n";
-	}
 	cout << "Please enter your account ID" << endl;
 	cin >> ChangeID;
 
 	cout << "How much money would you like to withdraw." << endl;
 	cin >> NewMoney;
 
-	for (int i = 0; i < information.size(); i++)
-	{
-		int checkID = stoi(information[i][0]);
-		if (checkID == ChangeID)
-		{
-			NewTotal = stoi(information[i][7]) - NewMoney;
-			fileout << information[i][0] << "," << information[i][1] << "," << information[i][2] << "," << information[i][3] << "," << information[i][4] << "," << information[i][5] << "," << information[i][6] << "," << NewTotal << '\n';
+	for (int i = 0; i < Custs.size(); i++) {
+		if (Custs[i].getId() == ChangeID) {
 			count = 1;
+			NewTotal = Custs[i].getMoney() - NewMoney;
+			Custs[i].setMoney(NewTotal);
 		}
-		else
-			fileout << information[i][0] << "," << information[i][1] << "," << information[i][2] << "," << information[i][3] << "," << information[i][4] << "," << information[i][5] << "," << information[i][6] << "," << information[i][7] << '\n';
 	}
 
 	if (count == 0) {
@@ -413,10 +297,6 @@ void withdrawl(vector<Customer>& Custs)
 	}
 
 	cout << "Thank you for working with Lawrence Tech credit union. You are all set, please come back soon." << endl;
-	file.close();
-	fileout.close();
-	remove("customer.csv");
-	rename("customer2.csv", "customer.csv");
 }
 
 //Shows all information about a customer
