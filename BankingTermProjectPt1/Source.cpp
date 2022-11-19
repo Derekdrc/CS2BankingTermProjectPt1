@@ -140,10 +140,7 @@ int menu() {
 void createCustomer(vector<Customer>& Custs) {
 	system("cls");
 
-	fstream file("customer.csv", ios::in);
-	ofstream fileout("customer2.csv");
-
-	int id;
+	int id = 0;
 	string name;
 	string dob;			//Customer Date of Birth
 	int ssn;			//Customer Social Security Numberd
@@ -151,39 +148,10 @@ void createCustomer(vector<Customer>& Custs) {
 	string phoneNumber;
 	int typeAccount;	//1 for Checkings, 2 for Savings
 	int money;
-	vector<vector<string>> information;
 	int newCustID = 1000;
-	vector<string> row;
-	string line, word;
 
-	if (file.is_open())
-	{
-		while (getline(file, line))
-		{
-			row.clear();
-
-			stringstream str(line);
-			while (getline(str, word, ','))
-				row.push_back(word);
-			information.push_back(row);
-		}
-
-	}
-	else
-	{
-		cout << "Could not open the file\n";
-	}
-
-	for (int i = 0; i < information.size(); i++)
-	{
-		int next = i + 1;
-		newCustID = stoi(information[i][0]);
-	}
-
-	id = newCustID + 1;
-	for (int i = 0; i < information.size(); i++)
-	{
-		fileout << information[i][0] << "," << information[i][1] << "," << information[i][2] << "," << information[i][3] << "," << information[i][4] << "," << information[i][5] << "," << information[i][6] << "," << information[i][7] << '\n';
+	for (int i = 0; i < Custs.size(); i++) {
+		id = Custs[i].getId() + 1;
 	}
 
 	cout << "What is the name going on the account?" << endl;
@@ -202,12 +170,8 @@ void createCustomer(vector<Customer>& Custs) {
 	cin >> typeAccount;
 	cout << endl << "How much money are you depositing?" << endl;
 	cin >> money;
-	fileout << id << "," << name << "," << dob << "," << ssn << "," << address << "," << phoneNumber << "," << typeAccount << "," << money << '\n';
+	Custs.push_back(Customer(id, name, dob, ssn, address, phoneNumber, typeAccount, money));
 	cout << "Thank you for working with Lawrence Tech credit union. You are all set, please come back soon.";
-	file.close();
-	fileout.close();
-	remove("customer.csv");
-	rename("customer2.csv", "customer.csv");
 }
 
 //Deletes an existing customer
@@ -459,58 +423,30 @@ void withdrawl(vector<Customer>& Custs)
 void viewCustomerInfo(vector<Customer>& Custs) {
 	//displays all information about a chosen customer
 	system("cls");
-	vector<vector<string>> content;
-	vector<string> row;
-	string line, word;
 	int test;
 	int count = 0;
 
-	fstream file("customer.csv", ios::in);
 	int id;
 	cout << "Who would you like to look up? Please enter customer id: ";
 	cin >> id;
 
-	if (file.is_open()) {
-		{
-			while (getline(file, line))
-			{
-				row.clear();
-
-				stringstream str(line);
-
-				while (getline(str, word, ','))
-					row.push_back(word);
-				content.push_back(row);
+	for (int i = 0; i < Custs.size(); i++) {
+		if (id == Custs[i].getId()) {
+			count = 1;
+			cout << "Customer ID: " << Custs[i].getId() << endl;
+			cout << "Customer Name: " << Custs[i].getName() << endl;
+			cout << "Customer Date of Birth: " << Custs[i].getDOB() << endl;
+			cout << "Customer SSN: " << Custs[i].getSSN() << endl;
+			cout << "Customer Address: " << Custs[i].getAddress() << endl;
+			cout << "Customer Phone Number: " << Custs[i].getNumber() << endl;
+			if (Custs[i].getAccountType() == 1) {
+				cout << "Customers account type: Checkings" << endl;
 			}
-		}
-	}
-	else {
-		cout << "Could not open the file\n";
-	}
-
-	for (int i = 0; i < content.size(); i++) {
-		for (int j = 0; j < content[i].size(); j++) {
-			test = stoi(content[i][0]);
-			if (test == id) {
-				count = 1;
-				cout << "Customer ID: " << content[i][0] << endl;
-				cout << "Customer Name: " << content[i][1] << endl;
-				cout << "Customer Date of Birth: " << content[i][2] << endl;
-				cout << "Customer SSN: " << content[i][3] << endl;
-				cout << "Customer Address: " << content[i][4] << endl;
-				cout << "Customer Phone Number: " << content[i][5] << endl;
-				int type = atoi(content[i][6].c_str());
-				if (type == 1) {
-					cout << "Customers account type: Checkings" << endl;
-				}
-				else if (type == 2) {
-					cout << "Customers account type: Savings" << endl;
-				}
-				cout << "Customer Account Balance: $" << content[i][7] << endl;
-				break;
+			else if (Custs[i].getAccountType() == 2) {
+				cout << "Customers account type: Savings" << endl;
 			}
+			cout << "Customer Account Balance: $" << Custs[i].getMoney() << endl;
 		}
-		cout << "\n";
 	}
 	if (count == 0) {
 		cout << "Account number does not match an existing customer." << endl;
@@ -521,31 +457,10 @@ void viewCustomerInfo(vector<Customer>& Custs) {
 
 //Prints out all customers
 void listCustomers(vector<Customer>& Custs) {
-	system("cls");
-	vector<vector<string>> content;
-	vector<string> row;
-	string line, word;
 
-	fstream file("customer.csv", ios::in);
-	if (file.is_open()) {
-		while (getline(file, line))
-		{
-			row.clear();
-
-			stringstream str(line);
-
-			while (getline(str, word, ','))
-				row.push_back(word);
-			content.push_back(row);
-		}
-	}
-	else {
-		cout << "Could not open the file\n";
-	}
-
-	for (int i = 0; i < content.size(); i++) {
-		cout << "Customer name: " << content[i][1] << endl;
-		cout << "Customer ID: " << content[i][0] << endl << endl;
+	for (int i = 0; i < Custs.size(); i++) {
+		cout << "Customer name: " << Custs[i].getName() << endl;
+		cout << "Customer ID: " << Custs[i].getId() << endl << endl;
 	}
 	system("pause");
 }
