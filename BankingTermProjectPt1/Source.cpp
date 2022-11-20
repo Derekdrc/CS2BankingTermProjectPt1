@@ -316,19 +316,7 @@ void viewCustomerInfo(vector<Customer>& customers) {
 	for (int i = 0; i < customers.size(); i++) {
 		if (id == customers[i].getId()) {
 			count = 1;
-			cout << "Customer ID: " << customers[i].getId() << endl;
-			cout << "Customer Name: " << customers[i].getName() << endl;
-			cout << "Customer Date of Birth: " << customers[i].getDOB() << endl;
-			cout << "Customer SSN: " << customers[i].getSSN() << endl;
-			cout << "Customer Address: " << customers[i].getAddress() << endl;
-			cout << "Customer Phone Number: " << customers[i].getNumber() << endl;
-			if (customers[i].getAccountType() == 1) {
-				cout << "Customers account type: Checkings" << endl;
-			}
-			else if (customers[i].getAccountType() == 2) {
-				cout << "Customers account type: Savings" << endl;
-			}
-			cout << "Customer Account Balance: $" << customers[i].getMoney() << endl;
+			customers[i].printPerson();		//Overidden print function
 		}
 	}
 	if (count == 0) {
