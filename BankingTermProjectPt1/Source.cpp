@@ -13,9 +13,10 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
-void start(vector<Customer> &);
+void start(vector<Customer>&);
 int menu();
 void createCustomer(vector<Customer>&);
 void deleteCustomer(vector<Customer>&);
@@ -24,11 +25,13 @@ void deposit(vector<Customer>&);
 void withdrawl(vector<Customer>&);
 void viewCustomerInfo(vector<Customer>&);
 void listCustomers(vector<Customer>&);
+void sortAccountId(vector<Customer>&);
+void sortName(vector<Customer>&);
 void stop(vector<Customer>&);
 
 
 int main() {
-	Customer* vector<Customer> customers;
+	vector<Customer> customers;
 	start(customers);
 	int choice = 0;
 	while (choice != 8) {
@@ -105,15 +108,7 @@ void start(vector<Customer>& customers) {
 		cout << "Could not open the file\n";
 	}
 	for (int i = 0; i < content.size(); i++) {
-		int accountType = stoi(content[i][6]);
-		if (accountType == 1) {
-			customers.push_back(Customer(stoi(content[i][0]), content[i][1], content[i][2], stoi(content[i][3]), content[i][4], content[i][5], stoi(content[i][7])));
-		}
-		else if (accountType == 2) {
-			customers.push_back(SavingsAccount(stoi(content[i][0]), content[i][1], content[i][2], stoi(content[i][3]), content[i][4], content[i][5], stoi(content[i][7])), true));
-		}
-		
-		
+		customers.push_back(Customer(stoi(content[i][0]), content[i][1], content[i][2], stoi(content[i][3]), content[i][4], content[i][5], stoi(content[i][6]), stoi(content[i][7])));
 	}
 
 	fin.close();
@@ -178,14 +173,7 @@ void createCustomer(vector<Customer>& customers) {
 	cin >> typeAccount;
 	cout << endl << "How much money are you depositing?" << endl;
 	cin >> money;
-	if (typeAccount == 1) {
-		customers.push_back(Customer(id, name, dob, ssn, address, phoneNumber, money));
-	}
-	else if (typeAccount == 2) {
-		bool isSavings = true;
-		customers.push_back(SavingsAccount(id, name, dob, ssn, address, phoneNumber, money, isSavings));
-	}
-	
+	customers.push_back(Customer(id, name, dob, ssn, address, phoneNumber, typeAccount, money));
 	cout << "Thank you for working with Lawrence Tech credit union. You are all set, please come back soon.";
 }
 
@@ -328,7 +316,19 @@ void viewCustomerInfo(vector<Customer>& customers) {
 	for (int i = 0; i < customers.size(); i++) {
 		if (id == customers[i].getId()) {
 			count = 1;
-			customers[i].printCustomer();
+			cout << "Customer ID: " << customers[i].getId() << endl;
+			cout << "Customer Name: " << customers[i].getName() << endl;
+			cout << "Customer Date of Birth: " << customers[i].getDOB() << endl;
+			cout << "Customer SSN: " << customers[i].getSSN() << endl;
+			cout << "Customer Address: " << customers[i].getAddress() << endl;
+			cout << "Customer Phone Number: " << customers[i].getNumber() << endl;
+			if (customers[i].getAccountType() == 1) {
+				cout << "Customers account type: Checkings" << endl;
+			}
+			else if (customers[i].getAccountType() == 2) {
+				cout << "Customers account type: Savings" << endl;
+			}
+			cout << "Customer Account Balance: $" << customers[i].getMoney() << endl;
 		}
 	}
 	if (count == 0) {
@@ -338,12 +338,61 @@ void viewCustomerInfo(vector<Customer>& customers) {
 
 }
 
+void sortAccountID(vector<Customer>& customers)
+{
+	vector<Customer> printVector;
+	for (int i = 0; i < customers.size(); i++) {
+		printVector.push_back(customers[i]);
+	}
+
+	for (int i = 0; i < printVector.size()-1; i++) {
+		for (int j = 0; j < printVector.size() - 1; j++) {
+			if (printVector[j].getId() > printVector[j + 1].getId()) {
+				swap(printVector[j], printVector[j + 1]);
+			}
+		}
+	}
+
+	for (int i = 0; i < printVector.size(); i++) {
+		cout << "Customer name: " << printVector[i].getName() << endl;
+		cout << "Customer ID: " << printVector[i].getId() << endl << endl;
+	}
+
+}
+
+void sortName(vector<Customer>& customers)
+{
+	vector<Customer> printVector;
+	for (int i = 0; i < customers.size(); i++) {
+		printVector.push_back(customers[i]);
+	}
+
+	for (int i = 0; i < printVector.size() - 1; i++) {
+		for (int j = 0; j < printVector.size() - 1; j++) {
+			if (printVector[j].getName() > printVector[j + 1].getName()) {
+				swap(printVector[j], printVector[j + 1]);
+			}
+		}
+	}
+
+	for (int i = 0; i < printVector.size(); i++) {
+		cout << "Customer name: " << printVector[i].getName() << endl;
+		cout << "Customer ID: " << printVector[i].getId() << endl << endl;
+	}
+
+}
+
 //Prints out all customers
 void listCustomers(vector<Customer>& customers) {
 
-	for (int i = 0; i < customers.size(); i++) {
-		cout << "Customer name: " << customers[i].getName() << endl;
-		cout << "Customer ID: " << customers[i].getId() << endl << endl;
+	int option;
+	system("cls");
+	cout << "Please choose if you want to sort by ID(1) or Name(2)" << endl;
+	cin >> option;
+	if (option == 1) {
+		sortAccountID(customers);
+	}else {
+		sortName(customers);
 	}
 	system("pause");
 }
